@@ -1,0 +1,100 @@
+\documentclass[10pt]{article}
+
+\usepackage[a4paper, margin=0cm, landscape]{geometry}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{english}
+
+\usepackage{nicefrac}
+\usepackage{calc}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=1pt] (char) {\footnotesize #1};}}
+
+%\usepackage{showframe}
+\pagestyle{empty}
+
+\setlength\unitlength{1mm}
+\setlength\parindent{5mm}
+\setlength\fboxsep{1mm}
+
+\newcommand{\bigO}[1]{\ensuremath{\mathcal{O}(#1)}}
+
+% 20x20 grid between (0,0) and (290,-200)
+\newcommand{\showgrid}{%
+	\put(0,0){\line(0,-1){200}}%
+	\put(0,0){\line(1,0){290}}%
+	\put(0,-200){\line(1,0){290}}%
+	\put(290,0){\line(0,-1){200}}%
+	\put(0,0){(0,0)} \put(0,-205){(0,-200)}%
+	\put(280,0){(290, 0)} \put(280,-205){(290,-200)}%
+	\multiput(20,0)(20,0){15}{\line(0,-1){200}}%
+	\multiput(0,-20)(0,-20){9}{\line(1,0){290}}%
+	\put(20,0){grid is (20,20)}%
+}
+
+\newcommand{\nicebox}[4]{%
+	\fbox{\begin{minipage}[b][#2mm-2\fboxsep][t]{#1mm-2\fboxsep}%
+		\begin{center}
+			\textsc{#3}%
+		\end{center}\vspace{-1em}
+		#4
+	\end{minipage}}%
+}
+
+\newcommand{\defbox}[5]{%
+	\newcommand{#1}{\nicebox{#2}{#3}{#4}{#5}}
+}
+
+\input{boxes.tex}
+
+\begin{document}%
+\noindent%
+\begin{picture}(0,0)(-5,0)%
+%%%%%%%%%%% PAGE 1 %%%%%%%%%%%%%%%%%%%%
+%\showgrid
+\put(0,-55){\boxAA}%\\
+\put(0,-125){\boxRMQrmqlca}%
+\put(0,-165){\boxRMQsegment}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{picture}%\newpage%
+%\noindent%
+%\begin{picture}(0,0)(-5,0)%
+%%%%%%%%%%%% PAGE 2 %%%%%%%%%%%%%%%%%%%%
+%%\showgrid
+%\put(0,-40){\boxa}%
+%\put(60,-20){\boxb}%
+%\put(60,-40){\boxb}%
+%\put(0,-100){\boxb}%
+%\put(60,-100){\boxb}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\end{picture}\newpage%
+%\noindent%
+%\begin{picture}(0,0)(-5,0)%
+%%%%%%%%%%%% PAGE 3 %%%%%%%%%%%%%%%%%%%%
+%%\showgrid
+%\put(0,-40){\boxa}%
+%\put(60,-20){\boxb}%
+%\put(60,-40){\boxb}%
+%\put(0,-80){\boxc}%
+%\put(80,-80){\boxa}%
+%\put(0,-100){\boxb}%
+%\put(60,-100){\boxb}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\end{picture}\newpage%
+%\noindent%
+%\begin{picture}(0,0)(-5,0)%
+%%%%%%%%%%%% PAGE 4 %%%%%%%%%%%%%%%%%%%%
+%%\showgrid
+%\put(0,-40){\boxa}%
+%\put(60,-20){\boxb}%
+%\put(60,-40){\boxb}%
+%\put(0,-80){\boxc}%
+%\put(80,-80){\boxa}%
+%\put(0,-100){\boxb}%
+%\put(60,-100){\boxb}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\end{picture}
+\end{document}
