@@ -9,9 +9,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \defbox{\boxAA}{100}{55}{Amortized analysis}{
 \textbf{Def:} DS supporting operations $o_1,\dots,o_k$.
-Amortized time of $o_i$ is $t_i(n)$ if for any valid sequence of $n$ operations in which $o_i$ occurs $n_i$ times takes total time $\bigO{\sum_j n_jt_j(n)}$.\\
-\textbf{Accounting method:} Charge $t_j(n)$ for operation $o_j$. If $t_j(n) >$ cost, distribute the remainder to accounts. If $t_j(n) <$ cost charge some accounts. Prove non-negative balance at all times.\\
-\textbf{Potential method:} $D_i$ is the DS after $i$-th operation, $\Phi(D_i)$ is the DS potential (eg. sum of all accounts). Real cost $c_i$, amortized $\hat{c}_i = c_i + \Phi(D_i) - \Phi(D_{i-1})$. Total cost $\sum_i \hat{c}_i = \sum_i c_i + \Phi(D_n) - \Phi(D_0)$. If $\Phi(D_n)\ge\Phi(D_0)$ then $\hat{c}$ is upper bound on true cost.
+Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in which $o_i$ occurs $n_i$ times, takes total time $\bigO{\sum_j n_jt_j(n)}$.\\
+\textbf{Accounting method:} Charge $t_j(n)$ for operation $o_j$. If $t_j(n) >$ cost: distribute the remainder to accounts. If $t_j(n) <$ cost: charge some accounts. Prove non-negative balance at all times.\\
+\textbf{Potential method:} $D_i$ is the DS after $i$-th operation, $\Phi(D_i)$ is the DS potential (eg. sum of all accounts). Real cost $c_i$, amortized $\hat{c}_i = c_i + \Phi(D_i) - \Phi(D_{i-1})$. Total cost $\sum_i \hat{c}_i = \sum_i c_i + \Phi(D_n) - \Phi(D_0)$. If $\Phi(D_n)\ge\Phi(D_0)$ then $\hat{c}$ is upper bound on true cost. Usually $\Phi(D_{0})=0$, then need $\Phi(D_i)\ge 0$.
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -21,16 +21,16 @@ Amortized time of $o_i$ is $t_i(n)$ if for any valid sequence of $n$ operations 
 % segmentové stromy
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \defbox{\boxRMQrmqlca}{100}{70}{RMQ and LCA}{
-\textbf{Trivial:} no preprocessing, $\bigO{n}$ query; $\bigO{n^3}$ preprocessing, $\bigO{n^2}$ memory, $\bigO{1}$ query; \circled{1} $\bigO{n^2}$/$\bigO{1}$ for RMQ.\\
-\textbf{RMQ$\to$LCA:} (Cartesian tree) Root is minimum $A[i]$, left subtree is cartesian tree of $A[<i]$, right is CT of $A[>i]$ (min-heap, in-order traversal is A). Linear time construction: process $A$ left to right, walk up the right spine of CT.\\
-\textbf{LCA$\to$ $\pm 1$RMQ:} Euler tour (DFS) to get depth array, store index of first visit for each node. $\bigO{n}$ preprocessing.\\
-\textbf{\circled{2} $\bigO{n\log n}$/$\bigO{1}$ RMQ:} (BIG from HW) Store answer for all intervals with length $2^k$. Combine two to answer any interval.\\
-\textbf{$\pm 1$RMQ:} Split to $\nicefrac{2n}{\log n}$ groups of size $n' = \nicefrac{1}{2}\log n$. Store minimum from each group, use \circled{2}. Since $\pm 1$, only $2^{n'} = \sqrt{n}$ different block types (min pos), use \circled{1}: $\bigO{\log^2 n}$ different queries for each block, $\bigO{\log\log n}$ bits for answer, total $\bigO{n}$ preprocess. For final answer compare three candidate positions. 
+\textbf{Trivial:} LCA: no preprocessing, $\bigO{n}$ query; $\bigO{n^3}$ preprocessing, $\bigO{n^2}$ memory, $\bigO{1}$ query; RMQ: \circled{1} $\bigO{n^2}$/$\bigO{1}$.\\
+\textbf{RMQ$\to$LCA:} Cartesian tree: root is minimum $A[i]$, left subtree is cartesian tree of $A[<i]$, right is CT of $A[>i]$ (min-heap, in-order traversal is A). Linear time construction: process $A$ left to right, walk up the right spine of the tree.\\
+\textbf{LCA$\to\pm 1$RMQ:} Euler tour (DFS) to get depth array, store index of first visit for each node. $\bigO{n}$ preprocessing.\\
+\textbf{RMQ in $\bigO{n\log n}$/$\bigO{1}$} \circled{2} (BIG from HW) Store answer for all intervals with length $2^k$. Combine two to answer query.\\
+\textbf{$\pm 1$RMQ:} Split to $\nicefrac{2n}{\log n}$ groups of size $n' = \nicefrac{1}{2}\log n$. Store minimum from each group, use \circled{2}. Since $\pm 1$, only $2^{n'} = \sqrt{n}$ different block types (min pos), use \circled{1}: $\bigO{\log^2 n}$ different queries for each type, $\bigO{\log\log n}$ bits for answer, total $\bigO{n}$ preprocess. For final answer compare three candidate positions. 
 }
 
 \defbox{\boxRMQsegment}{100}{40}{Segment trees}{
 \textbf{Root:} interval $[0,n)$, \textbf{Leafs:} intervals $[i,i+1)$\\
 \textbf{Node} $[i,j)$ has children $[i,k)$ and $[k,j)$ where $k = \lfloor\frac{i+j}{2}\rfloor$, stores $A[i]\circ A[i+1]\circ \cdots \circ A[j-1]$. Total $2n-1$ nodes, height $\lceil\log n\rceil$.\\
 \textbf{Query:} $A[x]\circ \cdots \circ A[y-1]$ ie $[x, y)$, canonical decomposition, $\bigO{\log n}$ time.\\
-\textbf{Can dec:} node $[i,j)$, invariant: overlaps $[x,y)$. If $[i,j) \subseteq [x,y)$ return $\{[i, j)\}$. Else $R := \emptyset$, if $[i,k)$ overlaps $[x,y)$ recurse left, add result to $R$. Same for right child, return $R$.
+\textbf{Can dec:} node $[i,j)$, invariant: overlaps $[x,y)$. If $[i,j) \subseteq [x,y)$ return $\{[i, j)\}$. Else $R := \emptyset$, if $[i,k)$ overlaps $[x,y)$ recurse left, add result to $R$. Same for right child, then return $R$.
 }
