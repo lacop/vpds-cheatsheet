@@ -16,6 +16,10 @@
 %\usepackage{showframe}
 \pagestyle{empty}
 
+\usepackage{todonotes}
+\let\oldtodo\todo
+\renewcommand{\todo}[1]{\oldtodo[inline]{#1}}
+
 \setlength\unitlength{1mm}
 \setlength\parindent{5mm}
 \setlength\fboxsep{1mm}
@@ -36,7 +40,7 @@
 }
 
 \newcommand{\nicebox}[4]{%
-	\fbox{\begin{minipage}[b][#2mm-2\fboxsep][t]{#1mm-2\fboxsep}%
+	\fbox{\begin{minipage}[b][#2mm-2\fboxsep-\fboxrule][t]{#1mm-2\fboxsep-\fboxrule}%
 		\begin{center}
 			\textsc{#3}%
 		\end{center}\vspace{-1em}
@@ -55,9 +59,10 @@
 \begin{picture}(0,0)(-5,0)%
 %%%%%%%%%%% PAGE 1 %%%%%%%%%%%%%%%%%%%%
 %\showgrid
-\put(0,-55){\boxAA}%\\
+\put(0,-55){\boxAA}%
 \put(0,-125){\boxRMQrmqlca}%
 \put(0,-165){\boxRMQsegment}%
+\put(100,-70){\boxEXT}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{picture}%\newpage%
 %\noindent%

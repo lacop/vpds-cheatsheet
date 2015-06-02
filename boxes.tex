@@ -34,3 +34,17 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 \textbf{Query:} $A[x]\circ \cdots \circ A[y-1]$ ie $[x, y)$, canonical decomposition, $\bigO{\log n}$ time.\\
 \textbf{Can dec:} node $[i,j)$, invariant: overlaps $[x,y)$. If $[i,j) \subseteq [x,y)$ return $\{[i, j)\}$. Else $R := \emptyset$, if $[i,k)$ overlaps $[x,y)$ recurse left, add result to $R$. Same for right child, then return $R$.
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [EXT] Štruktúry pre externú pamäť	
+% výpočtový model externej pamäti, cache oblivious model
+% B-stromy
+% statické cache-oblivious stromy s vEB rozložením
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defbox{\boxEXT}{100}{70}{External memory}{
+\textbf{Model:} infinite slow disk, fast memory with $M$ words; transfer between them in blocks of $B$ words; count number of transfers. \\
+\textbf{B-tree:} parameter T; node $v$ has $v.n$ keys and $0$ or $v.n-1$ children; keys are sorted, children contain only values between two keys; all leaves same depth; every node except root $T-1\le v.n \le 2T-1$, root has $1\le v.n \le 2T-1$. Set $T$ so each node fits within $\bigO{1}$ blocks. Height/time for all operations is $\bigO{\log_{B+1} n}$.\\
+\textbf{Cache oblivious:} don't know $B$, $M$; block transfers implicit.\\
+\textbf{vEB static tree:} \emph{van Emde Boas} memory layout -- cut tree in middle height; get top of $\approx\sqrt{n}$ nodes and $\approx\sqrt{n}$ bottom subtrees each with $\approx\sqrt{n}$; store all recursively.\\
+For analysis: look at \emph{level of detail} in above splitting where each subtree fits within $B$ -- will have height $\ge\nicefrac{1}{2}\log B$. If $M\ge 2B$ then need $\bigO{\log_{B+1} n}$ transfers.
+}
