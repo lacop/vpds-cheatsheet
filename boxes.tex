@@ -7,7 +7,7 @@
 % [AA] Amortizovaná zložitosť
 % definícia amortizovanej zložitosti, potenciálová funkcia
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\defbox{\boxAA}{100}{55}{Amortized analysis}{
+\defbox{\boxAA}{100}{55}{Amortized Analysis}{
 \textbf{Def:} DS supporting operations $o_1,\dots,o_k$.
 Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in which $o_i$ occurs $n_i$ times, takes total time $\bigO{\sum_j n_jt_j(n)}$.\\
 \textbf{Accounting method:} Charge $t_j(n)$ for operation $o_j$. If $t_j(n) >$ cost: distribute the remainder to accounts. If $t_j(n) <$ cost: charge some accounts. Prove non-negative balance at all times.\\
@@ -36,12 +36,54 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [SEARCH] Vyhľadávanie kľúčových slov	
+% invertovaný index
+% lexikografický strom
+% prienik triedených zoznamov (doubling search/galloping search)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defbox{\boxSEARCHmain}{100}{55}{Full-Text Keyword Search}{
+\textbf{Problem:} preprocess static set of documents (sequences of words) to answer queries: given word $w$ list all documents containing it.\\
+\textbf{Inverted index:} store all words along with list of document IDs; see \refbox{inverted index} for storage options. \\
+\textbf{Trie:} tree, edges labeled with letters, path from root is a string; store document IDs in nodes where word ends. For $|w|=m$, alphabet size $\sigma$, total word length $D$:\\
+{
+\centering
+\begin{tabular}{r l l l}
+\textit{Node edge storage} & \textit{Search} & \textit{Insert} & \textit{Space} \\
+Array of size $\sigma$ & \bigO{m} & \bigO{m \sigma} & \bigO{D \sigma}\\
+Sorted array & \bigO{m \log \sigma} & \bigO{m \log \sigma + \sigma} & \bigO{D} \\
+BST & \bigO{m \log \sigma} & \bigO{m \log \sigma} & \bigO{D}
+\end{tabular}
+}
+}
+
+\defbox{\boxSEARCHinverted}{100}{35}{Inverted Index (Full-Text Keyword Search)}{
+For $N$ words ($n$ distinct) of max length $m$ with alphabet size $\sigma$ and result count $p$:\\
+{\centering
+\begin{tabular}{r l l}
+\textit{Index storage} & \textit{Query} & \textit{Preprocessing} \\
+Sorted array & \bigO{m \log n + p} & \bigO{mN \log N} \\
+BST (balanced) & \bigO{m \log n + p} & \bigO{mN \log n} \\
+Hashing & \bigO{m+p}/\bigO{mn+p} & \bigO{mN}/\bigO{mNn} \\
+Trie & \bigO{m \log \sigma + p} & \bigO{mn \log \sigma}
+\end{tabular}
+}
+}
+
+\defbox{\boxSEARCHintersection}{90}{35}{Sorted List Intersection (2 Keyword Search)}{
+\textbf{Output:} intersection of two sorted lists, lengths $m \le n$.\\
+\textbf{Merging:} iterate over both at once: \bigO{m+n}\\
+\textbf{Binary search:} iterate over smaller, search through the larger one: \bigO{m \log n}\\
+\textbf{Doubling search:} like binary search but \bigO{\log i} (where $i$ is the result) instead of \bigO{\log n} -- double search interval until it overshoots, then binary search; \bigO{m \log \nicefrac{n}{m}}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [EXT] Štruktúry pre externú pamäť	
 % výpočtový model externej pamäti, cache oblivious model
 % B-stromy
 % statické cache-oblivious stromy s vEB rozložením
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\defbox{\boxEXT}{100}{70}{External memory}{
+\defbox{\boxEXT}{100}{70}{External Memory}{
 \textbf{Model:} infinite slow disk, fast memory with $M$ words; transfer between them in blocks of $B$ words; count number of transfers. \\
 \textbf{B-tree:} parameter T; node $v$ has $v.n$ keys and $0$ or $v.n-1$ children; keys are sorted, children contain only values between two keys; all leaves same depth; every node except root $T-1\le v.n \le 2T-1$, root has $1\le v.n \le 2T-1$. Set $T$ so each node fits within $\bigO{1}$ blocks. Height/time for all operations is $\bigO{\log_{B+1} n}$.\\
 \textbf{Cache oblivious:} don't know $B$, $M$; block transfers implicit.\\

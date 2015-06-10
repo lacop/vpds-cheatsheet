@@ -10,8 +10,11 @@
 \usepackage{calc}
 
 \usepackage{tikz}
+\usetikzlibrary{shapes}
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
             \node[shape=circle,draw,inner sep=1pt] (char) {\footnotesize #1};}}
+\newcommand*\refbox[1]{\tikz[baseline=(char.base)]{
+            \node[rectangle,draw,inner sep=2pt] (char) {\footnotesize #1};}}
 
 %\usepackage{showframe}
 \pagestyle{empty}
@@ -62,7 +65,10 @@
 \put(0,-55){\boxAA}%
 \put(0,-125){\boxRMQrmqlca}%
 \put(0,-165){\boxRMQsegment}%
+\put(0, -200){\boxSEARCHinverted}%
 \put(100,-70){\boxEXT}%
+\put(100,-125){\boxSEARCHmain}%
+\put(200,-35){\boxSEARCHintersection}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{picture}%\newpage%
 %\noindent%
