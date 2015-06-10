@@ -76,6 +76,25 @@ Trie & \bigO{m \log \sigma + p} & \bigO{mn \log \sigma}
 \textbf{Doubling search:} like binary search but \bigO{\log i} (where $i$ is the result) instead of \bigO{\log n} -- double search interval until it overshoots, then binary search; \bigO{m \log \nicefrac{n}{m}}
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [HASH] Hešovanie	
+% Perkeeftné hešovanie: algoritmus, odhad očakávanej veľkosti pamäte pri univerzálnej triedy hešovacích funkcií
+% Bloom Filters - algoritmus, približný odhad pravdepodobnosti chyby
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defbox{\boxHASHph}{90}{35}{Perfect Hashing}{
+\textbf{Top level:} universal hash function to table of size $\Theta(N)$ \\
+\textbf{Second level:} bucket $i$ with $c_i$ elements hashed to a table of size $\alpha c_i^2$. Expected \# of collisions: $\sum_{\substack{u,v \in X_i\\ u \ne v}} Pr[h(u) = h(v)] \le c_i^2 \frac{c}{m_i} = \frac{c}{\alpha} = \bigO{1}$ \\
+\textbf{Search:} $\bigO{1}$ \textbf{Space:} $\bigO{n}$ (deterministic)\\
+\textbf{Expected preprocessing time:} $\bigO{n}$\\
+}
+\defbox{\boxHASHbf}{90}{40}{Bloom Filters}{
+\textbf{Representation:} bit string $B[0,\dots,m-1]$ and k hash functions $h_i : U \to \{0, \dots , m-1 \}$ \\
+\textbf{Insert(x):} set bits $B[h_1(x)], \dots , B[h_k(x)]$ to 1  \\
+\textbf{Contains(x):} check if $B[h_1(x)], \dots , B[h_k(x)]$ are all 1 \\
+- if yes, claim x is in the set, \emph{possibility of error} \\
+- otherwise answer no, \emph{surely true} \\
+\textbf{False positive:} if all $h_i$ are totally random and independent, the probability of error is at most $(1-e^{\nicefrac{-nk}{m}})^k$ \\
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [EXT] Štruktúry pre externú pamäť	

@@ -6,6 +6,9 @@
 \usepackage{polyglossia}
 \setmainlanguage{english}
 
+\usepackage{amsmath}
+\usepackage{mathtools}
+
 \usepackage{nicefrac}
 \usepackage{calc}
 
@@ -26,6 +29,13 @@
 \setlength\unitlength{1mm}
 \setlength\parindent{5mm}
 \setlength\fboxsep{1mm}
+
+\makeatletter
+\g@addto@macro \normalsize {%
+ \setlength\abovedisplayskip{2pt plus 1pt minus 1pt}%
+ \setlength\belowdisplayskip{2pt plus 1pt minus 1pt}%
+}
+\makeatother
 
 \newcommand{\bigO}[1]{\ensuremath{\mathcal{O}(#1)}}
 
@@ -69,6 +79,8 @@
 \put(100,-70){\boxEXT}%
 \put(100,-125){\boxSEARCHmain}%
 \put(200,-35){\boxSEARCHintersection}%
+\put(200,-70){\boxHASHph}%
+\put(200,-110){\boxHASHbf}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{picture}%\newpage%
 %\noindent%
