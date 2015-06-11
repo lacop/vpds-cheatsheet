@@ -121,6 +121,97 @@ Trie & \bigO{m \log \sigma + p} & \bigO{mn \log \sigma}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [TEXT] Vyhľadávanie vzorky v texte	
+% triviálny algoritmus na presné výskyty
+% použitie konečných algoritmov, Morrisov-Prattov a Knuthov-Morrisov-Prattov algoritmus
+% dynamické programovanie na výpočet editačnej vzdialenosti a na hľadanie približných výskytov vzorky
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defbox{\boxTEXT}{90}{40}{Search for pattern $|P| = m$ in string $|T| = n$}{
+\textbf{Triv. alg}: $\bigO{nm}$; \textbf{NFA:} simulate in \bigO{m\sigma} steps \\
+\textbf{DFA:} NFA $\rightarrow$ DFA ($m+1$ states). Build time $\bigO{m \sigma}$, Simulation $\bigO{n}$ \\
+\textbf{MP}: NFA, add eps transitions $i$ to $j=sp[i]$ ($j<i$) when P[0, \dots, j-1] is the longest suffix of P[0, \dots, i-1] \\
+%use epsilon transitions when no other option \\
+%$i,sp[i],sp[sp[i]],\dots$ form a linked list of all suffixes of P[0 \dots i-1] which are prefixes of P \\
+Build, memory $\bigO{m}$, simulation $\bigO{n}$\\
+\textbf{KMP}: $sp2[i] =$ first transition on eps chain which has diff symbol.
+}
+
+\defbox{\boxTEXTapx}{100}{35}{Approximate string matching $\bigO{nm}$}{
+\textbf{Edit ops} ($u,v \in \Sigma^*$, $a,b \in \Sigma$): insrt ($uv \rightarrow uav$), del ($uav \rightarrow uv$), subs ($uav \rightarrow ubv$) \\
+\textbf{Edit dist} $d_E(S,T) = $ shortest sequence of edit operations that changes S to T.
+DP algorithm for $d_E(S,T)$:
+$A[i,j] = d_E(S[1 \dots i],T[1 \dots j])$; set $A[0,i]=A[i,0]=i$; then \\
+$A[i,j] = min\{A[i-1,j-1] + [S[i] \overset{?}{=} T[j]], A[i-1,j], A[i,j-1]\}$
+}
+
+\defbox{\boxTEXTmp}{55}{30}{MP search}{
+\scriptsize
+\begin{algorithmic}
+\State $state \gets 0$
+\For{$i \in [0,n)$}
+	\While{$state>0 \land T[i]\neq P[state]$}
+		\State $state \gets sp[state]$
+	\EndWhile
+	\If {$T[i]==P[state]$}
+        \State $state++$
+    \EndIf
+	\If {$T[i]==m$}
+        \State $\text{print occurance}$
+    \EndIf
+\EndFor
+\end{algorithmic}
+}
+
+\defbox{\boxTEXTmpp}{50}{32}{MP sp table}{
+\scriptsize
+\begin{algorithmic}
+\State $sp[0]=sp[1]=0$
+\State $j=0$
+\Comment {invariant $j=sp[i-1]$}
+\For{$i \in [2,m]$}
+	\While{$j>0 \land P[i-1]\neq P[j]$}
+		\State $\text{follow epsilon transitions}$
+		\State $j \gets sp[j]$
+	\EndWhile
+	\If {$P[i-1]==P[j]$}
+        \State $j++$
+    \EndIf
+	\State $sp[i] \gets j$
+\EndFor
+\end{algorithmic}
+}
+
+\defbox{\boxTEXTkmp}{50}{25}{MP $\rightarrow$ KMP}{
+\scriptsize
+\begin{algorithmic}
+\State $sp2[0]=0$
+\For{$i \in [1,m]$}
+	\If {$i==m \lor P[sp[i]] \neq P[i]$}
+        \State $sp2[i]=sp[i]$
+    \Else
+		\State $sp2[i] \gets sp2[sp[i]]$
+    \EndIf
+\EndFor
+\end{algorithmic}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [BW] Burrowsova–Wheelerova transformácia	
+% vytváranie, spätná transformácia, použitie na kompresiu, FM index
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\defbox{\boxBW}{90}{65}{BW}{
+\textbf{const:} sort all rotations of string lexicographically. out: last column. \\
+\textbf{reverse:} sort lex. to obtain First column. $F[i]$ follows $L[i]$. jth occurrence of x in F is the same as jth occurrence of x in L. LF[i] = row j in which F[j] corresponds to L[i] \\
+\textbf{alg:} $T[n]=\$,~s=0$. $i \in (n,0]:$ $T[i]=L[s];~s=LF[s]$ \\
+\textbf{C[x]:} the index of first occurance of x in F. \\
+\textbf{rank[x,i]} the number of occurances of x in $L[0 \dots i]$ \\
+\textbf{LF[i]} $C[L[i]] + rank[L[i],i-1]$ \\
+\textbf{counting occ of P (FM index)} search for string backwards using LF transformation \\
+$l=0,r=n$   $i \in (m,0]: ~a=P[i], ~l=C[a]+rank[a,l-1], ~r=C[a]+rank[a,r]-1, \text{if $l>r$ return 0}$. output: $r-l+1$.
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [HASH] Hešovanie	
 % Perkeeftné hešovanie: algoritmus, odhad očakávanej veľkosti pamäte pri univerzálnej triedy hešovacích funkcií
 % Bloom Filters - algoritmus, približný odhad pravdepodobnosti chyby

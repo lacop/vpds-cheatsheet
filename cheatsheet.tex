@@ -12,6 +12,9 @@
 \usepackage{nicefrac}
 \usepackage{calc}
 
+\usepackage[noend]{algpseudocode} % No explicit "end function" line
+\newcommand*\AlgLet[2]{\State #1 $\gets$ #2} % X <- Y assignment
+
 \usepackage{tikz}
 \usetikzlibrary{shapes}
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
@@ -91,6 +94,11 @@
 %\showgrid
 \put(0,-50){\boxSPLAYsplay}%
 \put(0,-105){\boxSPLAYlink}%
+\put(0,-145){\boxTEXT}%
+\put(0,-177){\boxTEXTmpp}%
+\put(50,-175){\boxTEXTmp}%
+\put(0,-202){\boxTEXTkmp}%
+\put(90,-35){\boxTEXTapx}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{picture}%\newpage%
 %\noindent%
