@@ -42,12 +42,12 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 % Tri verzie meldable háld: random, leftist a skew, v každej algoritmus pre zjednotenie a jeho analýza
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\defbox{\boxPQmeld}{90}{70}{Meldable heaps}{
+\defbox{\boxPQmeld}{90}{75}{Meldable heaps}{
 \textbf{Union($H_1, H_2$):} $\bigO{\log n}$, WLOG $H_1.key \leq H_2.key$\\
 \textbf{Insert:} union with node; \textbf{ExtrMin:} union of root subtrees; \textbf{DecrKey:} delete, insert; \textbf{Delete:} cut, union subtrees, rebalance \\
-\textbf{Random:} $H_2$ union with $H_1.left$ or $H_1.right$ at random, expected random root-nullptr walk length $\bigO{\log n}$ \\
-\textbf{Leftist:} $HN = $ Union($H_1.right, H_2$), if $HN.s \le H_1.s$ put as right child of $H_1$ otherwise left; $s(x)$ - dist. from $x$ to nearest nullptr, $s(x) \leq \log (n+1)$, $x\to$ nullptr path only to right has lenght $s(x)$ \\
-\textbf{Skew:} Union($H_1.right, H_2$), put as left child of $H_1$; $D(x)=|$subtree rooted at $x|$; edge $(v,p(v))$ heavy - $D(v) > D(p(v))/2$; root path $\leq \log n$ light edges, $\Phi=$ \# heavy right edges; cut children before recursion, add after, cost only when $H_1.r$ was light before cut
+\textbf{Random:} $H_2$ union with $H_1.left$ or $H_1.right$ at random, expected random root-nullptr walk length $\bigO{\log n}$\\
+\textbf{Leftist:} $HN = $ Union($H_1.right, H_2$), if $HN.s \le H_1.s$ put as right child of $H_1$ otherwise left; $s(x)$ - dist. from $x$ to nearest nullptr, $s(x) \leq \log (n+1)$, $x\to$ nullptr path only to right has lenght $s(x)$; \bigO{\log n} worst case \\
+\textbf{Skew:} Union($H_1.right, H_2$), put as left child of $H_1$; $D(x)=|$subtree rooted at $x|$; edge $(v,p(v))$ heavy - $D(v) > D(p(v))/2$; root path $\leq \log n$ light edges, $\Phi=$ \# heavy right edges; cut children before recursion, add after, cost only when $H_1.r$ was light before cut; \bigO{\log n} amortized
 }
 
 \defbox{\boxPQfib}{100}{70}{Fibonacci heap}{
@@ -437,7 +437,7 @@ Create tree. Instead of NULL pointers add fake nodes. Number verticies in BFS or
 \small
 \begin{algorithmic}
 \If{$V$ is empty}
-	\AlgLet{$V.minV.max$}{$x$}
+	\AlgLet{$V.min, V.max$}{$x$}
 	\State\Return
 \EndIf
 \If{$x<V.min$} swap $x \leftrightarrow V.min$ \EndIf
@@ -532,7 +532,7 @@ $\Phi$ : total number of mods in the latest versions of nodes \\
 
 \defbox{\boxPERdecomp}{110}{85}{Full Retroactivity on Decomposable Search Problems}{
 \textbf{Search problem:} set S, insert, delete, query(x,S) \\
-\textbf{Decomposable search prob:} query(x,$A \cup B$) = query(x,A) $\ast$ query(x,B). $\ast$ comp in \bigO{1}, possibly req. A and B disjoint. \\
+\textbf{Decomposable search prob:} query(x,$A \cup B$) = query(x,A) $\ast$ query(x,B). $\ast$ comp in \bigO{1}, possibly req. A, B disjoint; $x=(op,elem)$ \\
 \textbf{Examples:} exact set membership, nearest neighbor, predecessor \\
 \textbf{Full retro for dec. s. prob.:} each operations corresponds to some time interval $(b_a,e_a)$. (for example time of some element in Set). Build segment tree on this timeline. Each operations is in at most $\bigO{\log n}$ nodes (canon decomp). \\
 \textbf{Retro update:} find interval $(b_a,e_a)$ delete it from segment tree, add interval $(b_a',e_a')$ \\
@@ -554,6 +554,6 @@ Use \emph{fully retroactive} BST for dynamic (can add/delete edges, \emph{horizo
 \textbf{Range tree:} for \emph{1D} store points in balanced BST. Answer is all leaves between the interval (1D box) successor/predecessor. \\
 For \emph{2D} store by $x$ coordinate same way, for each internal node store pointer to BST storing same subtree by $y$; query: \bigO{\log^2 n}\\
 Same for $d$-D: space \bigO{n \log^{d-1} n}; query \bigO{\log^d n}\\
-\textbf{Layered RT:} 2D: store sorted by $y$ in each node as sorted array; also store for each element pointer to successor in left/right child's array. Search by $y$ once in root. Then search by $x$ in the BST, update $y$ array range in \bigO{1}. Query: \bigO{\log n}\\
+\textbf{Layered RT:} 2D: store sorted by $y$ in each node as sorted array; also store for each element its rank in left/right child's array. Search by $y$ once in root. Then search by $x$ in the BST, update $y$ array range in \bigO{1}. Query: \bigO{\log n}\\
 For $d$-D: use 2D as basecase for RT, query: \bigO{\log^{d-1} n}.
 }
