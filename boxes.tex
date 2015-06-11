@@ -473,6 +473,42 @@ For analysis: look at \emph{level of detail} in above splitting where each subtr
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [PER] Perzistentne datove struktury
+% definicia perzistentnych a retroaktivnych datovych struktur
+% vseobecne transformacie datovej struktury na ciastocne perzistentnu (fat  nodes, node copying)
+% uplna retroaktivita pre problem nasledovnika a podobne rozlozitelne vyhladavacie problemy
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defbox{\boxPERdef}{90}{200}{Persistent Data Structures}{
+\textbf{Partial Persistence:} Update latest version $\Rightarrow$ versions linearly ordered \\
+\textbf{Full Persistence:} Update any version (branch) $\Rightarrow$ versions form tree \\
+\textbf{Confluent Persistence:} Can combine two versions $\to$ new versions $\Rightarrow$ versions form DAG \\
+\textbf{Functional:} Never modify nodes. Only make new nodes. \\
+\textbf{Backtracking:} Query and update only current version, revert to an older version\\
+\textbf{Retroactive:} insert updates to the past, delete past updates, query at any past time relative to current set of updates\\
+\textbf{General transformation with fat nodes:} Add $\bigO{log n}$ factor overhead \\
+Fat Node - binary search tree with time as keys \\
+Each BST node holds a node of the original d.s. \\
+Query of original node at time t: predecessor search in BST\\
+Update of original node: insert a new maximum to BST\\
+\emph{Arbitrary pointer machine d.s.} with $f(n)$ update, $g(n)$ query \\
+\emph{Partially persistent version} with $\bigO{f(n)}$ update, $\bigO{g(n)}$ query, $\bigO{g(n) \log n}$ past query \\
+\textbf{General transformation with node copying:} Removes $\bigO{log n}$ factor overhead, assumes original structure has in-degree $\bigO{1}$ \\
+\emph{Arbitrary pointer machine d.s.} with at most $p = \bigO{1}$ incoming pointers per node and $f(n)$ update, $g(n)$ query \\
+\emph{Partially persistent version} with $\bigO{f(n)}$ amortized update, $\bigO{g(n)}$ query\\
+\textbf{New node:} original node, $p$ reverse pointers for current version only, $2p$ mods (version, field, value), multiple such nodes for an original node \\
+\textbf{Version:} time $t$ and original root node at time $t$\\
+\textbf{Read node at time t:} apply all mods with version < $t$. $\bigO{1}$ overhead.\\
+\textbf{Update node:} change $n.x$ from $z$ to $y$ \\
+If node not full, add a new mod \\
+Otherwise add a new node $n'$ with latest version of $n$\\
+Other nodes may have back pointers to $n$, change to $n'$\\
+Recursively change pointes to $n$ to point to $n'$ in the newest version - keep pointer to $n$ in the old version\\
+Add back pointer from $y$ to $n'$\\
+Remove back pointer from $z$ to $n$\\
+$\Phi$ : total number of mods in the latest versions of nodes \\
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [GEO] Geometrické dátové štruktúry	
 % lokalizácia bodu v rovine (planar point location) pomocou perzistentných a retroaktívnych štruktúr
 % rozsahové stromy (range trees) a ich zrýchlenie (layered range trees)
