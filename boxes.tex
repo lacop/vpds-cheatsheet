@@ -355,9 +355,17 @@ $l=0,r=n$   $i \in (m,0]: ~a=P[i], ~l=C[a]+rank[a,l-1], ~r=C[a]+rank[a,r]-1, \te
 % úsporné stromy, počet binárnych stromov
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \defbox{\boxSUCC}{90}{55}{Succint data structures}{
-Bit vector size \textbf{n}, rank and select in time \bigO{1}, stucture size $n + o(n)$ bits\\
-\textbf{Rank:} number of 1s in $A[0 \dots i]$. Structure is 2lvl hierarchy, superblocks (size $t_1=\log^2 n$, keep global rank at boundary) within them are blocks (size $t_2=\frac{1}{2}\log n$, keep rank (within superblock) at boundary). Block size $t_2$, all possible blocks $2^{t_2}$, total memory \bigO{2^{t_2} t_2 \log{t_2}} = \bigO{\sqrt{n} \log{n} \log \log n} = $o(n)$ bits\\
+\textbf{Lower bound:} $OPT = \lg|\mathcal{U}|$ bits to store any $x\in \mathcal{U}$\\
+\textbf{Implicit:} $OPT+\bigO{1}$ \textbf{Succint:} $OPT+o(OPT)$ \textbf{Compact:} $\bigO{OPT}$ bits.\\
+\textbf{Rank (and select):} $n$ bit vector; rank and select in \bigO{1}; size $n + o(n)$ bits; \emph{rank(i)} = \# of 1s in $A[0,\dots,i]$\\
+\emph{Superblocks} size $t_1=\log^2 n$; keep global rank at boundary, $\bigO{\frac{n}{t_1}\log n} = o(n)$; \emph{Blocks} size $t_2=\frac{1}{2}\log n$, keep rank in superblock at boundary, $\bigO{\frac{n}{t_2}\log t_1} = o(n)$. \\
+Store blocks as $t_2$-bit integers $=n$ bits. \\
+Block size $t_2$, all possible blocks $2^{t_2}$, total memory \bigO{2^{t_2} t_2 \log{t_2}} = \bigO{\sqrt{n} \log{n} \log \log n} = $o(n)$ bits\\
 %\textbf{Select:} position of $i^{th}$ 1 bit
+}
+
+\defbox{\boxSUCCwavelet}{100}{70}{Succint - Wavelet}{
+TODO
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -378,6 +386,66 @@ Bit vector size \textbf{n}, rank and select in time \bigO{1}, stucture size $n +
 - if yes, claim x is in the set, \emph{possibility of error} \\
 - otherwise answer no, \emph{surely true} \\
 \textbf{False positive:} if all $h_i$ are totally random and independent, the probability of error is at most $(1-e^{\nicefrac{-nk}{m}})^k$ \\
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [INT] Štruktúry pre celočíselné kľúče
+% van Emde Boas trees
+% x-fast trees
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defbox{\boxINTveb}{90}{60}{van Emde Boas tree}{
+\textbf{Universe:} Size $M$ values $\{ 0, \dots , M-1 \}$ \\
+\textbf{Split} into $\sqrt{M}$ clusters of size $\sqrt{M}$ plus summary structure for the clusters.\\
+\textbf{Hierarchical coordinates:} $x = \langle c, i \rangle$ where $c = \lfloor\frac{x}{\sqrt{M}}\rfloor$, $i = x \mod \sqrt{M}$ (recursive, $M$ gets smaller)\\
+\textbf{Cluster[c]} handles $\langle c, i\rangle$ for all $i$\\
+\textbf{Keep cluster min}, \emph{not} stored recursively. Also keep max, store recursively. \textbf{Space:} $\bigO{M}$  \\
+\textbf{Time:} $T(M) = T(\sqrt{M}) + \bigO{1} = \bigO{\log\log M}$\\
+\textbf{Search:} only one recursive call always.\\
+\textbf{Insert:} in case of two recursive calls the first one is $\bigO{1}$ (inserting to empty only stores as \emph{min}).\\
+}
+
+\defbox{\boxINTvebinsert}{50}{35}{vEB -- Insert($V, x=\langle c, i\rangle$)}{
+\scriptsize
+\begin{algorithmic}
+\If{$V$ is empty}
+	\AlgLet{$V.minV.max$}{$x$}
+	\State\Return
+\EndIf
+\If{$x<V.min$} swap $x \leftrightarrow V.min$ \EndIf
+\If{$x>V.max$} \AlgLet{$V.max$}{$x$} \EndIf
+\If{$V.cluser[c].min = null$}
+\State $Insert(V.summary, c)$ \Comment {\bigO{1}}
+\EndIf
+\State $Insert(V.cluser[c], i)$
+\end{algorithmic}
+}
+
+\defbox{\boxINTvebsucc}{50}{30}{vEB -- Successor($V, \langle c, i\rangle$)}{
+\scriptsize
+\begin{algorithmic}
+\If{$x<V.min$} \Return $V.min$ \EndIf
+\If{$i < V.cluster[c].max$}
+\State\Return{$\langle c, Successor(V.cluster[c], i)\rangle$}
+\EndIf
+\AlgLet{$c'$}{$Successor(V.summary, c)$}
+\State\Return{$\langle c', V.cluster[c'].min\rangle$}
+\end{algorithmic}
+}
+
+
+\defbox{\boxINTxft}{90}{120}{x-fast trie}{
+\textbf{Structure:} A binary tree where each subtree stores values whose binary representations start with a common prefix \\
+All values in the x-fast trie are stored at the leaves. Internal nodes are stored only if they have leaves in their subtree. \\
+If an internal node would have no left child, it stores a pointer to the smallest leaf in its right subtree instead, called a descendant pointer \\
+Each leaf stores a pointer to its predecessor and successor, thereby forming a doubly linked list.\\
+Finally, there is a hash table for each level that contains all the nodes on that level. \\
+\textbf{Find(k):} Lookup k in LSS[0] (hash table on all leaves) \\
+\textbf{Insert(k,v):} Find predecessor and successor of k, create new leaf for k, insert it in the linked list of leaves between the successor and predecessor, and give it a pointer to v. \\
+We walk from the root to the new leaf, creating the necessary nodes on the way down \\
+\textbf{Successor(k):} We first find Ak, the lowest ancestor of k. To find Ak, we perform a binary search on the levels. \\
+Once we find the lowest ancestor of k, we know that it has leaves in one of its subtrees and k should be in the other subtree. \\
+Therefore the descendant pointer points to the successor or the predecessor of k.\\
+Total query time is $\bigO{\log \log M}$ \\
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
