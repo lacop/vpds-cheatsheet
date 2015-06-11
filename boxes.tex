@@ -32,7 +32,7 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 \textbf{Root:} interval $[0,n)$, \textbf{Leafs:} intervals $[i,i+1)$\\
 \textbf{Node} $[i,j)$ has children $[i,k)$ and $[k,j)$ where $k = \lfloor\frac{i+j}{2}\rfloor$, stores $A[i]\circ A[i+1]\circ \cdots \circ A[j-1]$. Total $2n-1$ nodes, height $\lceil\log n\rceil$.\\
 \textbf{Query:} $A[x]\circ \cdots \circ A[y-1]$ ie $[x, y)$, canonical decomposition, $\bigO{\log n}$ time.\\
-\textbf{Can dec:} node $[i,j)$, invariant: overlaps $[x,y)$. If $[i,j) \subseteq [x,y)$ return $\{[i, j)\}$. Else $R := \emptyset$, if $[i,k)$ overlaps $[x,y)$ recurse left, add result to $R$. Same for right child, then return $R$.
+\textbf{Canon. decomp:} node $[i,j)$, invariant: overlaps $[x,y)$. If $[i,j) \subseteq [x,y)$ return $\{[i, j)\}$. Else $R := \emptyset$, if $[i,k)$ overlaps $[x,y)$ recurse left, add result to $R$. Same for right, then return $R$.
 }
 
 
@@ -107,7 +107,7 @@ For $N$ words ($n$ distinct) of max length $m$ with alphabet size $\sigma$ and r
 \textit{Index storage} & \textit{Query} & \textit{Preprocessing} \\
 Sorted array & \bigO{m \log n + p} & \bigO{mN \log N} \\
 BST (balanced) & \bigO{m \log n + p} & \bigO{mN \log n} \\
-Hashing & \bigO{m+p}/\bigO{mn+p} & \bigO{mN}/\bigO{mNn} \\
+Hash {\scriptsize (avg/worst)} & \bigO{m+p}/\bigO{mn+p} & \bigO{mN}/\bigO{mNn} \\
 Trie & \bigO{m \log \sigma + p} & \bigO{mn \log \sigma}
 \end{tabular}
 }
@@ -243,4 +243,22 @@ $l=0,r=n$   $i \in (m,0]: ~a=P[i], ~l=C[a]+rank[a,l-1], ~r=C[a]+rank[a,r]-1, \te
 \textbf{Cache oblivious:} don't know $B$, $M$; block transfers implicit.\\
 \textbf{vEB static tree:} \emph{van Emde Boas} memory layout -- cut tree in middle height; get top of $\approx\sqrt{n}$ nodes and $\approx\sqrt{n}$ bottom subtrees each with $\approx\sqrt{n}$; store all recursively.\\
 For analysis: look at \emph{level of detail} in above splitting where each subtree fits within $B$ -- will have height $\ge\nicefrac{1}{2}\log B$. If $M\ge 2B$ then need $\bigO{\log_{B+1} n}$ transfers.
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [GEO] Geometrické dátové štruktúry	
+% lokalizácia bodu v rovine (planar point location) pomocou perzistentných a retroaktívnych štruktúr
+% rozsahové stromy (range trees) a ich zrýchlenie (layered range trees)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defbox{\boxGEO}{100}{95}{Geometric Data Structures ($d$-D)}{
+\textbf{Planar point location:} given planar map (straight edges, no crossings); \emph{query:} which face contains given point\\
+\textbf{Vertical ray shooting:} given point find the edge a vertical ray hits first; solves PPL (pointer from edge to face below)\\
+\textbf{Line sweep:} move through interesting $x$ coordinates, store segments in BST in $y$ order; use \emph{partial persistent} BST for (static) point $(x,y)$ query -- find successor of $y$ in BST at time $x$; \bigO{\log n}.
+Use \emph{fully retroactive} BST for dynamic (can add/delete edges, \emph{horizontal segments only}) \bigO{\log n}.\\
+\textbf{Orthogonal range searching:} given points in $d$-D space and a box, report existence/count/list of points inside the box.\\
+\textbf{Range tree:} for \emph{1D} store points in balanced BST. Answer is all leaves between the interval (1D box) successor/predecessor. \\
+For \emph{2D} store by $x$ coordinate same way, for each internal node store pointer to BST storing same subtree by $y$; query: \bigO{\log^2 n}\\
+Same for $d$-D: space \bigO{n \log^{d-1} n}; query \bigO{\log^d n}\\
+\textbf{Layered RT:} 2D: store sorted by $y$ in each node as sorted array; also store for each element pointer to successor in left/right child's array. Search by $y$ once in root. Then search by $x$ in the BST, update $y$ array range in \bigO{1}. Query: \bigO{\log n}\\
+For $d$-D: use 2D as basecase for RT, query: \bigO{\log^{d-1} n}.
 }

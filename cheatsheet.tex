@@ -12,6 +12,8 @@
 \usepackage{nicefrac}
 \usepackage{calc}
 
+\usepackage{graphicx}
+
 \usepackage[noend]{algpseudocode} % No explicit "end function" line
 \newcommand*\AlgLet[2]{\State #1 $\gets$ #2} % X <- Y assignment
 
@@ -71,23 +73,23 @@
 \input{boxes.tex}
 
 \begin{document}%
-\noindent%
-\begin{picture}(0,0)(-5,0)%
-%%%%%%%%%%% PAGE 1 %%%%%%%%%%%%%%%%%%%%
-%\showgrid
-\put(0,-55){\boxAA}%
-\put(0,-125){\boxRMQrmqlca}%
-\put(0,-165){\boxRMQsegment}%
-\put(0, -200){\boxSEARCHinverted}%
-\put(100,-70){\boxEXT}%
-\put(100,-125){\boxSEARCHmain}%
-\put(100,-195){\boxPQfib}%
-\put(200,-35){\boxSEARCHintersection}%
-\put(200,-70){\boxHASHph}%
-\put(200,-110){\boxHASHbf}%
-\put(200,-180){\boxPQmeld}%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\end{picture}\newpage%
+%\noindent%
+%\begin{picture}(0,0)(-5,0)%
+%%%%%%%%%%%% PAGE 1 %%%%%%%%%%%%%%%%%%%%
+%%\showgrid
+%\put(0,-55){\boxAA}%
+%\put(0,-125){\boxRMQrmqlca}%
+%\put(0,-165){\boxRMQsegment}%
+%\put(0, -200){\boxSEARCHinverted}%
+%\put(100,-70){\boxEXT}%
+%\put(100,-125){\boxSEARCHmain}%
+%\put(100,-195){\boxPQfib}%
+%\put(200,-35){\boxSEARCHintersection}%
+%\put(200,-70){\boxHASHph}%
+%\put(200,-110){\boxHASHbf}%
+%\put(200,-180){\boxPQmeld}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\end{picture}\newpage%
 \noindent%
 \begin{picture}(0,0)(-5,0)%
 %%%%%%%%%%% PAGE 2 %%%%%%%%%%%%%%%%%%%%
@@ -96,9 +98,10 @@
 \put(0,-105){\boxSPLAYlink}%
 \put(0,-145){\boxTEXT}%
 \put(0,-177){\boxTEXTmpp}%
-\put(50,-175){\boxTEXTmp}%
+\put(50,-201){\rotatebox{90}{\boxTEXTmp}}%
 \put(0,-202){\boxTEXTkmp}%
 \put(90,-35){\boxTEXTapx}%
+\put(90,-130){\boxGEO}%
 \put(190,-60){\boxBW}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{picture}%\newpage%
