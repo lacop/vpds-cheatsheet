@@ -59,8 +59,8 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 \textbf{Analysis:} Prove $D(n) = \bigO{\log n}$: \textbf{1)} $\forall k \geq 2: F_{k+2} = 1 + \sum_{i=0}^k F_i, F_{k+2} \geq \phi^k$, \textbf{2)} $x$: children $y_1, \dots, y_k$ in link order, $j\geq 2: y_j.deg \geq j-2$, \textbf{3)} $x$ deg. $k$, size of subtree $\geq F_{k+2}$ (induction on smallest deg $k$ tree).
 }
 
-\defbox{\boxPQfibexmin}{45}{20}{FIB -- ExtractMin}{
-\scriptsize
+\defbox{\boxPQfibexmin}{50}{25}{FIB -- ExtractMin}{
+\small
 \begin{algorithmic}
 \AlgLet{$z$}{$H.min$}
 \State add each child of $z$ to root list
@@ -70,8 +70,8 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 \end{algorithmic}
 }
 
-\defbox{\boxPQfibdeckey}{45}{25}{FIB -- DecreaseKey}{
-\scriptsize
+\defbox{\boxPQfibdeckey}{50}{35}{FIB -- DecreaseKey}{
+\small
 \begin{algorithmic}
 \AlgLet{$x.key$}{$k$}
 \AlgLet{$y$}{$x.parent$}
@@ -83,8 +83,8 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 \end{algorithmic}
 }
 
-\defbox{\boxPQfibconsol}{45}{30}{FIB -- Consolidate}{
-\scriptsize
+\defbox{\boxPQfibconsol}{50}{40}{FIB -- Consolidate}{
+\small
 \begin{algorithmic}
 \AlgLet{$A[0..maxdeg]$}{$null$}
 \For{$x \in $ root list}
@@ -99,8 +99,8 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 \end{algorithmic}
 }
 
-\defbox{\boxPQfiblink}{45}{25}{FIB -- HeapLink($x,y$)}{
-\scriptsize
+\defbox{\boxPQfiblink}{50}{30}{FIB -- HeapLink($x,y$)}{
+\small
 \begin{algorithmic}
 \State WLOG $x.key \le y.key$
 \State remove $y$ from root list
@@ -111,8 +111,8 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 \end{algorithmic}
 }
 
-\defbox{\boxPQfibcasc}{45}{25}{FIB -- CascadingCut($y$)}{
-\scriptsize
+\defbox{\boxPQfibcasc}{50}{35}{FIB -- CascadingCut($y$)}{
+\small
 \begin{algorithmic}
 \AlgLet{$z$}{$y.parent$}
 \If{$z\neq null$}
@@ -146,8 +146,8 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 \textbf{FindRoot:} expose, findHead, \textbf{Link($v, w$):} $v$ root, make $v$ child of $w$; expose both, join paths, \textbf{Cut($v$):} $v$ not root, cut edge $v$ to parent; expose, splitAbove
 }
 
-\defbox{\boxSPLAYexpose}{55}{45}{SPLAY -- Expose($v$)}{
-\scriptsize
+\defbox{\boxSPLAYexpose}{60}{65}{SPLAY -- Expose($v$)}{
+\small
 \begin{algorithmic}
 \AlgLet{$y$}{$cutPathBelow(v)$}
 \If{$y\neq null$}
@@ -238,8 +238,8 @@ Trie & \bigO{m \log \sigma + p} & \bigO{mn \log \sigma}
 \textbf{Compute LCP lemma:} $L[i] = LCP(i, i+1)$. if $SA[x+1]+1 = SA[y+1] \Rightarrow L[y] \geq L[x] - 1.$ \refbox{LCP on SA}\\
 \textbf{Create array:} Add enough zeroes to the end, create groups of 3 letters for every pos. $\Rightarrow$ create 3 sets: $S_0, S_1, S_2$, Recursively create suffix array for $concat(S_1,S_2) = SA_{1,2}$. Compute $rank$ for $SA_{1,2}$. For $S_0$, represent $S[3i\dots n]$ as $(S[3i], rank[3i+1])$, get suffix array $S_0$ by radix sort. Merge $SA_0$ and $SA_{1,2}$, comparing either $(S[i], rank[i+1])$ for $i \% 3 == 1$ or $(S[i], S[i+1], rank[i+2])$ for $i \% 3 == 2$.
 }
-\defbox{\boxSUFFIXlcp}{50}{30}{LCP on SA}{
-\scriptsize
+\defbox{\boxSUFFIXlcp}{60}{40}{LCP on SA}{
+\small
 \begin{algorithmic}
 \State $h=0$
 \For{$i \in [0,n]$}
@@ -276,12 +276,11 @@ Build, memory $\bigO{m}$, simulation $\bigO{n}$\\
 \textbf{Edit ops} ($u,v \in \Sigma^*$, $a,b \in \Sigma$): insrt ($uv \rightarrow uav$), del ($uav \rightarrow uv$), subs ($uav \rightarrow ubv$) \\
 \textbf{Edit dist} $d_E(S,T) = $ shortest sequence of edit operations that changes S to T.
 DP algorithm for $d_E(S,T)$:
-$A[i,j] = d_E(S[1 \dots i],T[1 \dots j])$; set $A[0,i]=A[i,0]=i$; then \\
-$A[i,j] = min\{A[i-1,j-1] + [S[i] == T[j]], A[i-1,j], A[i,j-1]\}$
+$A[i,j] = d_E(S[1 \dots i],T[1 \dots j])$; set $A[0,i]=A[i,0]=i$; then $A[i,j] = min\{A[i-1,j-1] + [S[i] \neq T[j]], A[i-1,j]+1, A[i,j-1]+1\}$
 }
 
-\defbox{\boxTEXTmp}{55}{30}{MP search}{
-\scriptsize
+\defbox{\boxTEXTmp}{65}{40}{MP search}{
+\small
 \begin{algorithmic}
 \State $state \gets 0$
 \For{$i \in [0,n)$}
@@ -298,8 +297,8 @@ $A[i,j] = min\{A[i-1,j-1] + [S[i] == T[j]], A[i-1,j], A[i,j-1]\}$
 \end{algorithmic}
 }
 
-\defbox{\boxTEXTmpp}{50}{35}{MP sp table}{
-\scriptsize
+\defbox{\boxTEXTmpp}{60}{45}{MP sp table}{
+\small
 \begin{algorithmic}
 \State $sp[0]=sp[1]=0$
 \State $j=0$
@@ -317,8 +316,8 @@ $A[i,j] = min\{A[i-1,j-1] + [S[i] == T[j]], A[i-1,j], A[i,j-1]\}$
 \end{algorithmic}
 }
 
-\defbox{\boxTEXTkmp}{50}{25}{MP $\rightarrow$ KMP}{
-\scriptsize
+\defbox{\boxTEXTkmp}{60}{35}{MP $\rightarrow$ KMP}{
+\small
 \begin{algorithmic}
 \State $sp2[0]=0$
 \For{$i \in [1,m]$}
@@ -329,6 +328,29 @@ $A[i,j] = min\{A[i-1,j-1] + [S[i] == T[j]], A[i-1,j], A[i,j-1]\}$
     \EndIf
 \EndFor
 \end{algorithmic}
+}
+
+\defbox{\boxTEXTlv}{110}{60}{Landau-Vishkin Approximate String Matching \bigO{kn}}{
+\textbf{Approximate string matching:} substrings of $T$ with $d_E \le k$.\\
+$A[i,j] = \min_k d_E(P[0,\dots,i], T[k,\dots,j])$\\
+Diagonal number $d$: all values $A[i,j]$ where $j-i=d$\\
+$L[d,e]$ maximum row $i$ on diagonal $d$ with $A[i,i+d]\le e$\\
+{\small%
+\begin{algorithmic}
+\For{$e \in [0,k]$}
+	\For{$d \in [-e,n]$}
+		\AlgLet{$i$}{$\min\{m, \max\{L[d,e-1]+1, L[d-1,e-1], L[d+1,e-1]+1\}\}$}
+		\While{$i < m \land i+d<n \land P[i] = T[i+d]$}
+			\AlgLet{$i$}{$i+1$}
+		\EndWhile
+		\AlgLet{$L[d,e]$}{$i$}
+		\If{$L[d,e]=m$}
+			\State print occurrence ending at $d+m$
+		\EndIf
+	\EndFor
+\EndFor
+\end{algorithmic}
+}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -411,8 +433,8 @@ Create tree. Instead of NULL pointers add fake nodes. Number verticies in BFS or
 \textbf{Insert:} in case of two recursive calls the first one is $\bigO{1}$ (inserting to empty only stores as \emph{min}).\\
 }
 
-\defbox{\boxINTvebinsert}{50}{35}{vEB -- Insert($V, x=\langle c, i\rangle$)}{
-\scriptsize
+\defbox{\boxINTvebinsert}{60}{45}{vEB -- Insert($V, x=\langle c, i\rangle$)}{
+\small
 \begin{algorithmic}
 \If{$V$ is empty}
 	\AlgLet{$V.minV.max$}{$x$}
@@ -427,8 +449,8 @@ Create tree. Instead of NULL pointers add fake nodes. Number verticies in BFS or
 \end{algorithmic}
 }
 
-\defbox{\boxINTvebsucc}{50}{30}{vEB -- Successor($V, \langle c, i\rangle$)}{
-\scriptsize
+\defbox{\boxINTvebsucc}{55}{40}{vEB -- Successor($V, \langle c, i\rangle$)}{
+\small
 \begin{algorithmic}
 \If{$x<V.min$} \Return $V.min$ \EndIf
 \If{$i < V.cluster[c].max$}
