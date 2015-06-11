@@ -120,6 +120,50 @@ Trie & \bigO{m \log \sigma + p} & \bigO{mn \log \sigma}
 \textbf{Doubling search:} like binary search but \bigO{\log i} (where $i$ is the result) instead of \bigO{\log n} -- double search interval until it overshoots, then binary search; \bigO{m \log \nicefrac{n}{m}}
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [SUFFIX] Sufixové stromy a polia	
+% sufixový strom
+% sufixové pole
+% vyhľadávanie vzorky v sufixovom strome a poli
+% lineárny algoritmus na konštrukciu sufixového poľa
+% konverzia zo sufixového poľa na sufixový strom a naopak
+% použitie sufixového stromu a lca na hľadanie približných výskytov vzorky pri Hammingovej vzdialenosti
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defbox{\boxSUFFIX}{100}{140}{Suffix Trees and Suffix Arrays}{
+\textbf{Repr.:} Trie of suffixes of \textit{T\$}, deg. 2 nodes merged.\\
+\textbf{Generalized:} More strings, in leaves store source index.\\
+\textbf{Max. repeat:} substr. (node) $T[i\dots i+k]$ is max. repeat $\Leftrightarrow$ $\exists j: T[i\dots i+k] = T[j\dots j+k]$, but $T[i-1] \neq T[j-1] \land T[i+k+1] \neq T[j+k+1]$. Max. repeat $\Leftrightarrow$ is diverse\\
+\textbf{Apx. match:} Insert $T$ and $P$ in gen. tree, preproc. LCA in $O(|T|+|P|)$, LCA is LCP $\Rightarrow$ for each suffix in $T$ jump $\#err = k$ times using LCA $\Rightarrow O(nk)$ \\
+\textbf{Printing doc.:} Append distinct $\$_i$ for each doc., create suffix tree. DFS: Nodes corresp. to intervals. In leaves $\$_i$ store pos. of prev. $\$_i$. \#docs matching node $w = interval(i,j)$ in tree - \#leaves in $(i,j)$ < $i$ (RMQ).\\  
+\textbf{Tree$\to$array:} DFS, children in asc. order. \\
+\textbf{Array$\to$tree:} Build $L[i] = LCP[i,i+1]$, this is depth of node. Create Cartesian tree on $L$: find all mins, recurse on intervals before, between, after the mins. DFS traverse, add leaves to each node with value from array in order.\\
+\textbf{Search in array:} $O(m+logn)$, $LCP(i,j) = lcp(T[SA[i]\dots n-1], T[SA[j]\dots n-1)$. As binary search, let $L, R$ boundaries, $k = \frac{L+R}{2}$, $XL = LCP(X,L), XR = LCP(X,R)$, if $XL \geq XR$:
+\begin{itemize}[noitemsep, topsep=0pt]
+\item if $LCP(L,k) > XL \Rightarrow L := k$
+\item if $LCP(L,k) < XL \Rightarrow R := k, XR := LCP(L,k)$
+\item if $LCP(L,k) = XL \Rightarrow $ compare at $XL$, move accordingly
+\end{itemize}
+\textbf{Compute LCP lemma:} $L[i] = LCP(i, i+1)$. if $SA[x+1]+1 = SA[y+1] \Rightarrow L[y] \geq L[x] - 1.$ \refbox{LCP on SA}\\
+\textbf{Create array:} Add enough zeroes to the end, create groups of 3 letters for every pos. $\Rightarrow$ create 3 sets: $S_0, S_1, S_2$, Recursively create suffix array for $concat(S_1,S_2) = SA_{1,2}$. Compute $rank$ for $SA_{1,2}$. For $S_0$, represent $S[3i\dots n]$ as $(S[3i], rank[3i+1])$, get suffix array $S_0$ by radix sort. Merge $SA_0$ and $SA_{1,2}$, comparing either $(S[i], rank[i+1])$ for $i \% 3 == 1$ or $(S[i], S[i+1], rank[i+2])$ for $i \% 3 == 2$.
+}
+\defbox{\boxSUFFIXlcp}{50}{30}{LCP on SA}{
+\scriptsize
+\begin{algorithmic}
+\State $h=0$
+\For{$i \in [0,n]$}
+	\If {$rank[i] > 0$}
+        \While {$T[i+h] == T[k+h]$}
+            \State $h++$
+        \EndWhile
+        \State $L[rank[i]-1] = h$
+        \If {$h > 0$}
+            \State $h--$
+        \EndIf
+    \EndIf
+\EndFor
+\end{algorithmic}
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [TEXT] Vyhľadávanie vzorky v texte	
 % triviálny algoritmus na presné výskyty
@@ -162,7 +206,7 @@ $A[i,j] = min\{A[i-1,j-1] + [S[i] \overset{?}{=} T[j]], A[i-1,j], A[i,j-1]\}$
 \end{algorithmic}
 }
 
-\defbox{\boxTEXTmpp}{50}{32}{MP sp table}{
+\defbox{\boxTEXTmpp}{50}{35}{MP sp table}{
 \scriptsize
 \begin{algorithmic}
 \State $sp[0]=sp[1]=0$
