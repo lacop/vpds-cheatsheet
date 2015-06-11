@@ -277,7 +277,7 @@ Build, memory $\bigO{m}$, simulation $\bigO{n}$\\
 \textbf{Edit dist} $d_E(S,T) = $ shortest sequence of edit operations that changes S to T.
 DP algorithm for $d_E(S,T)$:
 $A[i,j] = d_E(S[1 \dots i],T[1 \dots j])$; set $A[0,i]=A[i,0]=i$; then \\
-$A[i,j] = min\{A[i-1,j-1] + [S[i] \overset{?}{=} T[j]], A[i-1,j], A[i,j-1]\}$
+$A[i,j] = min\{A[i-1,j-1] + [S[i] == T[j]], A[i-1,j], A[i,j-1]\}$
 }
 
 \defbox{\boxTEXTmp}{55}{30}{MP search}{
@@ -354,7 +354,7 @@ $l=0,r=n$   $i \in (m,0]: ~a=P[i], ~l=C[a]+rank[a,l-1], ~r=C[a]+rank[a,r]-1, \te
 % štruktúra RRR a jej súvis s entropiou
 % úsporné stromy, počet binárnych stromov
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\defbox{\boxSUCC}{90}{55}{Succint data structures}{
+\defbox{\boxSUCC}{90}{55}{Succint DS -- Rank}{
 \textbf{Lower bound:} $OPT = \lg|\mathcal{U}|$ bits to store any $x\in \mathcal{U}$\\
 \textbf{Implicit:} $OPT+\bigO{1}$ \textbf{Succint:} $OPT+o(OPT)$ \textbf{Compact:} $\bigO{OPT}$ bits.\\
 \textbf{Rank (and select):} $n$ bit vector; rank and select in \bigO{1}; size $n + o(n)$ bits; \emph{rank(i)} = \# of 1s in $A[0,\dots,i]$\\
@@ -364,8 +364,10 @@ Block size $t_2$, all possible blocks $2^{t_2}$, total memory \bigO{2^{t_2} t_2 
 %\textbf{Select:} position of $i^{th}$ 1 bit
 }
 
-\defbox{\boxSUCCwavelet}{100}{70}{Succint - Wavelet}{
-TODO
+\defbox{\boxSUCCwavelet}{100}{50}{Succint DS - Wavelet and RRR}{
+\textbf{Wavelet tree:} recursively split $\Sigma$ to $\Sigma_{0,1}$, then store binary vector $B[i] = j$ for $S[i] \in \Sigma_j$. Recursively until both alphabet partitions are only single character. "Tree" depth and time for \emph{rank} or \emph{select} is \bigO{\log|\Sigma|}.\\
+\textbf{RRR:} Similar to rank, instead of storing block as $t_2$-bit integer store \emph{class} (\# of 1s in block) and \emph{signature} (lexi order of this block among blocks with that \# of 1s). For many 1s or many 0s this will require fewer bits total.\\
+\textbf{Entropy:} $H(S) = \sum_{a\in\Sigma} \frac{n_a}{n}\lg\frac{n}{n_a} \le \lg|\Sigma|$ where $a$ occurs $n_a$ times. Total space $nH(S) + o(n)$.
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -375,7 +377,7 @@ TODO
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \defbox{\boxHASHph}{90}{35}{Perfect Hashing}{
 \textbf{Top level:} universal hash function to table of size $\Theta(N)$ \\
-\textbf{Second level:} bucket $i$ with $c_i$ elements hashed to a table of size $\alpha c_i^2$. Expected \# of collisions: $\sum_{\substack{u,v \in X_i\\ u \ne v}} Pr[h(u) = h(v)] \le c_i^2 \frac{c}{m_i} = \frac{c}{\alpha} = \bigO{1}$ \\
+\textbf{Second level:} bucket $i$ with $c_i$ elements hashed to a table of size $\alpha c_i^2$. Expected \# of collisions: $\sum_{\substack{u,v \in X_i\\ u \ne v}} Pr[h(u) = h(v)] \le c_i^2 \frac{c}{m_i} = \frac{c}{\alpha} < \nicefrac{1}{2}$ for some $c,\alpha$ \\
 \textbf{Search:} $\bigO{1}$ \textbf{Space:} $\bigO{n}$ (deterministic)\\
 \textbf{Expected preprocessing time:} $\bigO{n}$\\
 }
