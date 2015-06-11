@@ -52,11 +52,79 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 
 \defbox{\boxPQfib}{100}{70}{Fibonacci heap}{
 \textbf{Structure:} list of rooted trees, node degree $\leq D(n)=\bigO{\log n}$, sibling pointers, non-root node marked iff lost child since getting father, $\Phi=$ \#roots + 2\#marked nodes \\
-\textbf{Lazy:} $\bigO{1}$, Insert: new root, Min: look, Union: join root list \\
+\textbf{Lazy:} $\bigO{1}$, \emph{Insert:} new root, \emph{Min:} look, \emph{Union:} join root list \\
 \textbf{ExtrMin:} $\bigO{\log n}$ am., remove min root, child to root list, consolidate - join trees until each different degree \\
 \textbf{DecrKey(x):} $\bigO{1}$ am., decrease, if violates heap cond. cut $x$ with subtree to root list, cascading cut - try to mark $p(x)$, if alredy marked cut him to root, cascade again, rec. call cost 0 - pays with $\Phi$ change, everything else $\bigO{1}$ am. \\
 \textbf{Delete:}  $\bigO{\log n}$ am., decrease key to -inf, extract min \\
-\textbf{Analysis:} Prove $D(n) = \bigO{\log n}$: \textbf{1)} $\forall k \geq 2: F_{k+2} = 1 + \sum_{i=0}^k F_i, F_{k+2} \geq \phi^k$, \textbf{2)} $x$, $y_1, \dots, y_k$ child in link order, $j\geq 2: y_j.deg \geq j-2$, \textbf{3)} $x$ deg. $k$, size of subtree $\geq F_{k+2}$ (induction on smallest deg $k$ tree).
+\textbf{Analysis:} Prove $D(n) = \bigO{\log n}$: \textbf{1)} $\forall k \geq 2: F_{k+2} = 1 + \sum_{i=0}^k F_i, F_{k+2} \geq \phi^k$, \textbf{2)} $x$: children $y_1, \dots, y_k$ in link order, $j\geq 2: y_j.deg \geq j-2$, \textbf{3)} $x$ deg. $k$, size of subtree $\geq F_{k+2}$ (induction on smallest deg $k$ tree).
+}
+
+\defbox{\boxPQfibexmin}{45}{20}{FIB -- ExtractMin}{
+\scriptsize
+\begin{algorithmic}
+\AlgLet{$z$}{$H.min$}
+\State add each child of $z$ to root list
+\State remove $z$ from root list
+\State $Consolidate()$
+\State \Return{$z$}
+\end{algorithmic}
+}
+
+\defbox{\boxPQfibdeckey}{45}{25}{FIB -- DecreaseKey}{
+\scriptsize
+\begin{algorithmic}
+\AlgLet{$x.key$}{$k$}
+\AlgLet{$y$}{$x.parent$}
+\If {$y \neq null \land x.key < y.key$}
+	\State $Cut(x, y)$
+	\State $CascadingCut(y)$
+\EndIf
+\State update $H.min$
+\end{algorithmic}
+}
+
+
+\defbox{\boxPQfibconsol}{45}{30}{FIB -- Consolidate}{
+\scriptsize
+\begin{algorithmic}
+\AlgLet{$A[0..maxdeg]$}{$null$}
+\For{$x \in $ root list}
+	\While {$A[x.deg] \neq null$}
+		\AlgLet{$y$}{$A[x.deg]$}
+		\AlgLet{$A[x.deg]$}{$null$}
+		\AlgLet{$x$}{$HeapLink(H, x, y)$}
+    \EndWhile
+    \AlgLet{$A[x.deg]$}{$x$}
+\EndFor
+\State create root list from $A$
+\end{algorithmic}
+}
+
+\defbox{\boxPQfiblink}{45}{25}{FIB -- HeapLink($x,y$)}{
+\scriptsize
+\begin{algorithmic}
+\State WLOG $x.key \le y.key$
+\State remove $y$ from root list
+\State make $y$ child of $x$
+\AlgLet{$x.deg$}{$x.deg+1$}
+\AlgLet{$y.mark$}{$false$}
+\State \Return{$x$}
+\end{algorithmic}
+}
+
+\defbox{\boxPQfibcasc}{45}{25}{FIB -- CascadingCut($y$)}{
+\scriptsize
+\begin{algorithmic}
+\AlgLet{$z$}{$y.parent$}
+\If{$z\neq null$}
+	\If{$y.mark = false$}
+		\AlgLet{$y.mark$}{$true$}
+	\Else
+		\State $Cut(H, y, z)$
+		\State $CascadingCut(z)$
+	\EndIf
+\EndIf
+\end{algorithmic}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -253,6 +321,19 @@ $A[i,j] = min\{A[i-1,j-1] + [S[i] \overset{?}{=} T[j]], A[i-1,j], A[i,j-1]\}$
 \textbf{LF[i]:} $C[L[i]] + rank[L[i],i-1]$ \\
 \textbf{Counting occurrences of P (FM index)} search for string backwards using LF transformation \\
 $l=0,r=n$   $i \in (m,0]: ~a=P[i], ~l=C[a]+rank[a,l-1], ~r=C[a]+rank[a,r]-1, \text{if $l>r$ return 0}$. output: $r-l+1$.
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [SUCC] Úsporné dátové štruktúry	
+% štruktúra pre rank a select
+% wavelet tree (rank nad väčšou abecedou)
+% štruktúra RRR a jej súvis s entropiou
+% úsporné stromy, počet binárnych stromov
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defbox{\boxSUCC}{90}{55}{Succint data structures}{
+Bit vector size \textbf{n}, rank and select in time \bigO{1}, stucture size $n + o(n)$ bits\\
+\textbf{Rank:} number of 1s in $A[0 \dots i]$. Structure is 2lvl hierarchy, superblocks (size $t_1=\log^2 n$, keep global rank at boundary) within them are blocks (size $t_2=\frac{1}{2}\log n$, keep rank (within superblock) at boundary). Block size $t_2$, all possible blocks $2^{t_2}$, total memory \bigO{2^{t_2} t_2 \log{t_2}} = \bigO{\sqrt{n} \log{n} \log \log n} = $o(n)$ bits\\
+%\textbf{Select:} position of $i^{th}$ 1 bit
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

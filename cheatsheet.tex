@@ -14,6 +14,9 @@
 \usepackage{calc}
 
 \usepackage{graphicx}
+\usepackage{xcolor}
+
+\usepackage{marvosym}
 
 \usepackage[noend]{algpseudocode} % No explicit "end function" line
 \newcommand*\AlgLet[2]{\State #1 $\gets$ #2} % X <- Y assignment
@@ -24,6 +27,8 @@
             \node[shape=circle,draw,inner sep=1pt] (char) {\footnotesize #1};}}
 \newcommand*\refbox[1]{\tikz[baseline=(char.base)]{
             \node[rectangle,draw,inner sep=2pt] (char) {\footnotesize #1};}}
+
+
 
 %\usepackage{showframe}
 \pagestyle{empty}
@@ -67,8 +72,23 @@
 	\end{minipage}}%
 }
 
+\newcommand{\untitledbox}[3]{%
+	\fbox{\begin{minipage}[b][#2mm-2\fboxsep-\fboxrule][t]{#1mm-2\fboxsep-\fboxrule}%
+		\vspace*{\fill}%
+		\centering #3%
+		\vspace*{\fill}%
+	\end{minipage}}%
+}
+
 \newcommand{\defbox}[5]{%
 	\newcommand{#1}{\nicebox{#2}{#3}{#4}{#5}}
+}
+
+\newcommand{\whitebox}[2]{%
+	\fcolorbox{white}{white}{\begin{minipage}[b][#2mm-2\fboxsep-\fboxrule][t]{#1mm-2\fboxsep-\fboxrule}%
+	\hfill%
+	\end{minipage}
+	}
 }
 
 \input{boxes.tex}
@@ -98,6 +118,7 @@
 \put(0,-50){\boxSPLAYsplay}%
 \put(0,-105){\boxSPLAYlink}%
 \put(0,-145){\boxTEXT}%
+\put(0,-200){\boxSUCC}%
 \put(90,-35){\boxTEXTapx}%
 \put(90,-130){\boxGEO}%
 \put(190,-60){\boxBW}%
@@ -108,10 +129,18 @@
 \begin{picture}(0,0)(-5,0)%
 %%%%%%%%%%% PAGE 3 %%%%%%%%%%%%%%%%%%%%
 %\showgrid
+\put(50,-35){\untitledbox{5}{5}{\Coffeecup}}%
+\put(95,-70){\untitledbox{5}{10}{\scriptsize \AtForty \\ \Handwash \\ \NoIroning}}%
 \put(0,-35){\boxTEXTmpp}%
 \put(0,-65){\boxTEXTmp}%
 \put(0,-90){\boxTEXTkmp}%
 \put(50,-30){\boxSUFFIXlcp}%
+\put(55,-60){\boxPQfibconsol}%
+\put(50,-66){\whitebox{6}{6}}%
+\put(50,-85){\boxPQfiblink}%
+\put(100,-20){\boxPQfibexmin}%
+\put(100,-45){\boxPQfibdeckey}%
+\put(100,-70){\boxPQfibcasc}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{picture}%\newpage%
 %\noindent%
