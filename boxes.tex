@@ -200,14 +200,14 @@ $A[i,j] = min\{A[i-1,j-1] + [S[i] \overset{?}{=} T[j]], A[i-1,j], A[i,j-1]\}$
 % vytváranie, spätná transformácia, použitie na kompresiu, FM index
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\defbox{\boxBW}{90}{65}{BW}{
-\textbf{const:} sort all rotations of string lexicographically. out: last column. \\
-\textbf{reverse:} sort lex. to obtain First column. $F[i]$ follows $L[i]$. jth occurrence of x in F is the same as jth occurrence of x in L. LF[i] = row j in which F[j] corresponds to L[i] \\
+\defbox{\boxBW}{100}{60}{Burrows-Wheeler Transform}{
+\textbf{Construct:} sort all rotations of string lexicographically; out: last column $L$. \\
+\textbf{Reverse:} sort lex. to obtain first column $F$. $F[i]$ follows $L[i]$. $j$-th occurrence of $x$ in $F$ is the same as $j$-th occurrence of $x$ in $L$. $LF[i]$ = row $j$ in which $F[j]$ corresponds to $L[i]$ \\
 \textbf{alg:} $T[n]=\$,~s=0$. $i \in (n,0]:$ $T[i]=L[s];~s=LF[s]$ \\
-\textbf{C[x]:} the index of first occurance of x in F. \\
-\textbf{rank[x,i]} the number of occurances of x in $L[0 \dots i]$ \\
-\textbf{LF[i]} $C[L[i]] + rank[L[i],i-1]$ \\
-\textbf{counting occ of P (FM index)} search for string backwards using LF transformation \\
+\textbf{C[x]:} the index of first occurance of $x$ in $F$. \\
+\textbf{rank[x,i]:} the number of occurances of $x$ in $L[0 \dots i]$ \\
+\textbf{LF[i]:} $C[L[i]] + rank[L[i],i-1]$ \\
+\textbf{Counting occurrences of P (FM index)} search for string backwards using LF transformation \\
 $l=0,r=n$   $i \in (m,0]: ~a=P[i], ~l=C[a]+rank[a,l-1], ~r=C[a]+rank[a,r]-1, \text{if $l>r$ return 0}$. output: $r-l+1$.
 }
 
