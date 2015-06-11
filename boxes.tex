@@ -272,7 +272,7 @@ Build, memory $\bigO{m}$, simulation $\bigO{n}$\\
 \textbf{KMP}: $sp2[i] =$ first transition on eps chain which has diff symbol.
 }
 
-\defbox{\boxTEXTapx}{100}{35}{Approximate string matching $\bigO{nm}$}{
+\defbox{\boxTEXTapx}{100}{30}{Approximate string matching $\bigO{nm}$}{
 \textbf{Edit ops} ($u,v \in \Sigma^*$, $a,b \in \Sigma$): insrt ($uv \rightarrow uav$), del ($uav \rightarrow uv$), subs ($uav \rightarrow ubv$) \\
 \textbf{Edit dist} $d_E(S,T) = $ shortest sequence of edit operations that changes S to T.
 DP algorithm for $d_E(S,T)$:
@@ -370,6 +370,10 @@ Block size $t_2$, all possible blocks $2^{t_2}$, total memory \bigO{2^{t_2} t_2 
 \textbf{Entropy:} $H(S) = \sum_{a\in\Sigma} \frac{n_a}{n}\lg\frac{n}{n_a} \le \lg|\Sigma|$ where $a$ occurs $n_a$ times. Total space $nH(S) + o(n)$.
 }
 
+\defbox{\boxSUCCtree}{100}{25}{Succint binary tree}{
+Create tree. Instead of NULL pointers add fake nodes. Number verticies in BFS order. Create array A[i] = 1 $\Leftrightarrow$ vertex $i$ is real. Left(i) = $2 \cdot rank(i)$. Right(i) = $1+Left(i)$. Parent(i) = $select(i//2)$. \emph{Proof:} induction on i, children of node i-1 preceed childr. of i
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [HASH] Hešovanie	
 % Perkeeftné hešovanie: algoritmus, odhad očakávanej veľkosti pamäte pri univerzálnej triedy hešovacích funkcií
@@ -395,14 +399,15 @@ Block size $t_2$, all possible blocks $2^{t_2}$, total memory \bigO{2^{t_2} t_2 
 % van Emde Boas trees
 % x-fast trees
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\defbox{\boxINTveb}{90}{60}{van Emde Boas tree}{
+\defbox{\boxINTveb}{90}{60}{INT -- van Emde Boas tree}{
 \textbf{Universe:} Size $M$ values $\{ 0, \dots , M-1 \}$ \\
+\textbf{Problem:} store set of items, support successor query\\
 \textbf{Split} into $\sqrt{M}$ clusters of size $\sqrt{M}$ plus summary structure for the clusters.\\
 \textbf{Hierarchical coordinates:} $x = \langle c, i \rangle$ where $c = \lfloor\frac{x}{\sqrt{M}}\rfloor$, $i = x \mod \sqrt{M}$ (recursive, $M$ gets smaller)\\
 \textbf{Cluster[c]} handles $\langle c, i\rangle$ for all $i$\\
 \textbf{Keep cluster min}, \emph{not} stored recursively. Also keep max, store recursively. \textbf{Space:} $\bigO{M}$  \\
 \textbf{Time:} $T(M) = T(\sqrt{M}) + \bigO{1} = \bigO{\log\log M}$\\
-\textbf{Search:} only one recursive call always.\\
+\textbf{Successor:} only one recursive call always.\\
 \textbf{Insert:} in case of two recursive calls the first one is $\bigO{1}$ (inserting to empty only stores as \emph{min}).\\
 }
 
@@ -435,19 +440,22 @@ Block size $t_2$, all possible blocks $2^{t_2}$, total memory \bigO{2^{t_2} t_2 
 }
 
 
-\defbox{\boxINTxft}{90}{120}{x-fast trie}{
-\textbf{Structure:} A binary tree where each subtree stores values whose binary representations start with a common prefix \\
-All values in the x-fast trie are stored at the leaves. Internal nodes are stored only if they have leaves in their subtree. \\
-If an internal node would have no left child, it stores a pointer to the smallest leaf in its right subtree instead, called a descendant pointer \\
-Each leaf stores a pointer to its predecessor and successor, thereby forming a doubly linked list.\\
-Finally, there is a hash table for each level that contains all the nodes on that level. \\
-\textbf{Find(k):} Lookup k in LSS[0] (hash table on all leaves) \\
-\textbf{Insert(k,v):} Find predecessor and successor of k, create new leaf for k, insert it in the linked list of leaves between the successor and predecessor, and give it a pointer to v. \\
-We walk from the root to the new leaf, creating the necessary nodes on the way down \\
-\textbf{Successor(k):} We first find Ak, the lowest ancestor of k. To find Ak, we perform a binary search on the levels. \\
-Once we find the lowest ancestor of k, we know that it has leaves in one of its subtrees and k should be in the other subtree. \\
-Therefore the descendant pointer points to the successor or the predecessor of k.\\
-Total query time is $\bigO{\log \log M}$ \\
+\defbox{\boxINTxft}{90}{65}{INT -- x-fast trie}{
+\textbf{Structure:} Make binary vector for universe, 1 iff that element is present in the set. Build binary tree over this, each node is logical OR of children.\\
+\textbf{Successor:} Given pointer to some leaf binary search on the path to root for first "1" node (monotone sequence). Other child of that node (not on this leaf-to-root path) contains the predecessor or successor (left or right sibling), get min/max present element from that subtree. Store all present items in linked list to convert between predecessor and successor. \bigO{\log \log M} time, \bigO{M \log\log M} space\\
+\textbf{X-fast:} to save space don't store tree but only paths to non-zero leaves as "0"/"1" strings (left/right branch). For each string store all prefixes in hash table. Then can binary search in the hash table. \emph{Space:} \bigO{n\log M}
+%A binary tree where each subtree stores values whose binary representations start with a common prefix \\
+%All values in the x-fast trie are stored at the leaves. Internal nodes are stored only if they have leaves in their subtree. \\
+%If an internal node would have no left child, it stores a pointer to the smallest leaf in its right subtree instead, called a descendant pointer \\
+%Each leaf stores a pointer to its predecessor and successor, thereby forming a doubly %linked list.\\
+%Finally, there is a hash table for each level that contains all the nodes on that level. \\
+%\textbf{Find(k):} Lookup k in LSS[0] (hash table on all leaves) \\
+%\textbf{Insert(k,v):} Find predecessor and successor of k, create new leaf for k, insert it in the linked list of leaves between the successor and predecessor, and give it a pointer to v. \\
+%We walk from the root to the new leaf, creating the necessary nodes on the way down \\
+%\textbf{Successor(k):} We first find Ak, the lowest ancestor of k. To find Ak, we perform a binary search on the levels. \\
+%Once we find the lowest ancestor of k, we know that it has leaves in one of its subtrees and k should be in the other subtree. \\
+%Therefore the descendant pointer points to the successor or the predecessor of k.\\
+%Total query time is $\bigO{\log \log M}$ \\
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
