@@ -35,6 +35,50 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 \textbf{Can dec:} node $[i,j)$, invariant: overlaps $[x,y)$. If $[i,j) \subseteq [x,y)$ return $\{[i, j)\}$. Else $R := \emptyset$, if $[i,k)$ overlaps $[x,y)$ recurse left, add result to $R$. Same for right child, then return $R$.
 }
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [PQ] Prioritné rady
+% Fibonacciho halda a jej amortizovaná analýza
+% Tri verzie meldable háld: random, leftist a skew, v každej algoritmus pre zjednotenie a jeho analýza
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\defbox{\boxPQmeld}{90}{70}{Meldable heaps}{
+\textbf{Union($H_1, H_2$):} $\bigO{\log n}$, WLOG $H_1.key \leq H_2.key$\\
+\textbf{Insert:} union with node; \textbf{ExtrMin:} union of root subtrees; \textbf{DecrKey:} delete, insert; \textbf{Delete:} cut, union subtrees, rebalance \\
+\textbf{Random:} $H_2$ union with $H_1.left$ or $H_1.right$ at random, expected random root-nullptr walk length $\bigO{\log n}$ \\
+\textbf{Leftist:} $HN = $ Union($H_1.right, H_2$), if $HN.s \le H_1.s$ put as right child of $H_1$ otherwise left; $s(x)$ - dist. from $x$ to nearest nullptr, $s(x) \leq \log (n+1)$, $x\to$ nullptr path only to right has lenght $s(x)$ \\
+\textbf{Skew:} Union($H_1.right, H_2$), put as left child of $H_1$; $D(x)=|$subtree rooted at $x|$; edge $(v,p(v))$ heavy - $D(v) > D(p(v))/2$; root path $\leq \log n$ light edges, $\Phi=$ \# heavy right edges; cut children before recursion, add after, cost only when $H_1.r$ was light before cut
+}
+
+\defbox{\boxPQfib}{100}{70}{Fibonacci heap}{
+\textbf{Structure:} list of rooted trees, node degree $\leq D(n)=\bigO{\log n}$, sibling pointers, non-root node marked iff lost child since getting father, $\Phi=$ \#roots + 2\#marked nodes \\
+\textbf{Lazy:} $\bigO{1}$, Insert: new root, Min: look, Union: join root list \\
+\textbf{ExtrMin:} $\bigO{\log n}$ am., remove min root, child to root list, consolidate - join trees until each different degree \\
+\textbf{DecrKey(x):} $\bigO{1}$ am., decrease, if violates heap cond. cut $x$ with subtree to root list, cascading cut - try to mark $p(x)$, if alredy marked cut him to root, cascade again, rec. call cost 0 - pays with $\Phi$ change, everything else $\bigO{1}$ am. \\
+\textbf{Delete:}  $\bigO{\log n}$ am., decrease key to -inf, extract min \\
+\textbf{Analysis:} Prove $D(n) = \bigO{\log n}$: \textbf{1)} $\forall k \geq 2: F_{k+2} = 1 + \sum_{i=0}^k F_i, F_{k+2} \geq \phi^k$, \textbf{2)} $x$, $y_1, \dots, y_k$ child in link order, $j\geq 2: y_j.deg \geq j-2$, \textbf{3)} $x$ deg. $k$, size of subtree $\geq F_{k+2}$ (induction on smallest deg $k$ tree).
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% [SPLAY] Splay stromy a link-cut stromy
+% splay stromy (algoritmus, zložitosť a potenciálová funkcia, netreba celý dôkaz)
+% použitie splay stromov na join a split
+% link-cut stromy (štruktúra, expose, netreba analýzu zložitosti)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\defbox{\boxSPLAYsplay}{90}{50}{Splay trees}{
+\textbf{BST} w/o balance info, am. $\bigO{\log n}$ ops., move el. to root after access, decr. overall height \\
+\textbf{Splay(x):} zig/zag rotations until $x$ root, real cost: \# rotations, $D(x)$ size of $x$ subtree, rank $r(x) = \log D(x)$, $\Phi(T) = \sum_{x \in T} r(x)$, cost $\bigO{\log n}$ am. \\
+\textbf{Search, Delete, Insert(x):} as in BST  then splay, insert increases rank on root-$x$ path, at most $\bigO{\log n}$, \textbf{fMin(x):} splay($x$), splay leftmost, ret. it, \textbf{join($v_1, v_2$):} keys $v_1 \leq v_2$, $m$=fMin($v_2$), splay($v_1$), $v_1$ as left child of $m$, \textbf{SplitBefore/After($x$):} splay(x), cut one child
+}
+
+\defbox{\boxSPLAYlink}{90}{55}{Link-cut trees}{
+\textbf{Path:} splay tree, key - pos. on path (not stored), findHead, split, join same \\
+\textbf{L-C:} forest, each node $\leq 1$ solid edge, other dashed; tree as coll. of solid paths, connected by dashed parent ptrs
+\textbf{Expose($x$):} make $x$ lower end of solid path to root, $\bigO{\log^2 n}$ am., splitBelow($x$), jump to solid path root, splice root, repeat; \textbf{Splice($x$):} splitBelow($p(v)$), make that edge dashed, join $x$ and $p(x)$ \\
+\textbf{FindRoot:} expose, findHead, \textbf{Link($v, w$):} $v$ root, make $v$ child of $w$; expose both, join paths, \textbf{Cut($v$):} $v$ not root, cut edge $v$ to parent; expose, splitAbove
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [SEARCH] Vyhľadávanie kľúčových slov	
 % invertovaný index
