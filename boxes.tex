@@ -83,7 +83,6 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 \end{algorithmic}
 }
 
-
 \defbox{\boxPQfibconsol}{45}{30}{FIB -- Consolidate}{
 \scriptsize
 \begin{algorithmic}
@@ -146,6 +145,31 @@ Amortized time of $o_i$ is $t_i(n)$ if any valid sequence of $n$ operations, in 
 \textbf{Expose($x$):} make $x$ lower end of solid path to root, $\bigO{\log^2 n}$ am., splitBelow($x$), jump to solid path root, splice root, repeat; \textbf{Splice($x$):} splitBelow($p(v)$), make that edge dashed, join $x$ and $p(x)$ \\
 \textbf{FindRoot:} expose, findHead, \textbf{Link($v, w$):} $v$ root, make $v$ child of $w$; expose both, join paths, \textbf{Cut($v$):} $v$ not root, cut edge $v$ to parent; expose, splitAbove
 }
+
+\defbox{\boxSPLAYexpose}{55}{45}{SPLAY -- Expose($v$)}{
+\scriptsize
+\begin{algorithmic}
+\AlgLet{$y$}{$cutPathBelow(v)$}
+\If{$y\neq null$}
+\AlgLet{$findPathHead(y).dashed$}{$v$}
+\EndIf
+\While{$true$}
+	\AlgLet{$x$}{$findPathHead(v)$}
+	\AlgLet{$w$}{$x.dashed$}
+	\If{$w = null$} \Comment{$x$ is root}
+		\State break
+	\EndIf
+	\AlgLet{$x.dashed$}{$null$}
+	\AlgLet{$q$}{$splitPathBelow(w)$}
+	\If{$q \neq null$}
+		\AlgLet{$findPathHead(q).dashed$}{$w$}
+	\EndIf
+	\State $linkPaths(w,x)$
+	\AlgLet{$v$}{$w$}
+\EndWhile
+\end{algorithmic}
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [SEARCH] Vyhľadávanie kľúčových slov	
