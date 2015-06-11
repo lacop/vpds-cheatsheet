@@ -508,6 +508,16 @@ Remove back pointer from $z$ to $n$\\
 $\Phi$ : total number of mods in the latest versions of nodes \\
 }
 
+\defbox{\boxPERdecomp}{110}{85}{Full Retroactivity on Decomposable Search Problems}{
+\textbf{Search problem:} set S, insert, delete, query(x,S) \\
+\textbf{Decomposable search prob:} query(x,$A \cup B$) = query(x,A) $\ast$ query(x,B). $\ast$ comp in \bigO{1}, possibly req. A and B disjoint. \\
+\textbf{Examples:} exact set membership, nearest neighbor, predecessor \\
+\textbf{Full retro for dec. s. prob.:} each operations corresponds to some time interval $(b_a,e_a)$. (for example time of some element in Set). Build segment tree on this timeline. Each operations is in at most $\bigO{\log n}$ nodes (canon decomp). \\
+\textbf{Retro update:} find interval $(b_a,e_a)$ delete it from segment tree, add interval $(b_a',e_a')$ \\
+\textbf{query(x,t):} Find a leaf for predecessor of t. Search in every node on path to root.  Combine result using $\ast$. $\bigO{\log max_{time}}$ factor overhead on everything.\\
+\textbf{Example:} Set membership problem. Each interval corresponds to time of some element in S. When performing query whether some element is in S in some time t, query leaf at time $t$. Every node on path from this leaf to root contains this interval which means they have information about elements that lived at time t. Operation $\ast$ is now logical or.
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % [GEO] Geometrické dátové štruktúry	
 % lokalizácia bodu v rovine (planar point location) pomocou perzistentných a retroaktívnych štruktúr
