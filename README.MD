@@ -6,15 +6,21 @@ Cheatsheet for [VPDS](http://compbio.fmph.uniba.sk/vyuka/vpds) course (SK: *Vybr
 Contributors
 ------------
 
-TODO
+- Martin Gábriš
+- Jakub Jančina
+- Juraj Macháč
+- Laco Pápay
+- Martin Strapko
 
 Sources
 -------
 
-TODO
+- [Wikipedia](https://en.wikipedia.org/wiki/Main_Page)
+- [VPDS course lecture notes](http://compbio.fmph.uniba.sk/vyuka/vpds/index.php)
+- [Advanced data structures](http://courses.csail.mit.edu/6.851/spring14/lectures/) videos and lecture notes
 
 License
 -------
 
-TODO
+This cheatsheet and its source code is released under the Creative Commons [BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) license.
 
